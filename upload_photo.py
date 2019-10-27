@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Use text editor to edit the script and type in valid Instagram username/password
-
-
+import json
 import time
 from timeloop import Timeloop
 from datetime import timedelta
@@ -20,12 +19,28 @@ tl = Timeloop()
 # password = os.environ['instagram_password']
 # instagramAPI = InstagramAPI(username, password)
 # instagramAPI.login()  # login
-# photoId = 1
-# caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #dogoftheday " \
-#           "#doglovers #puppies #doggo #puppylove #ilovemydog #puppiesofinstagram #doglife " \
-#           "#doggy #dogsofinsta #Husky #Huskies #HuskiesOfInstagram " \
-#           "#HuskyPuppy #SiberianHusky #HuskyGram #HuskyLove #HuskyNation #HuskyOfInstagram #HuskyWorld #HuskyDog " \
-#           "#InstaHusky #HuskyPuppies "
+photoId = 1
+caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #dogoftheday " \
+          "#doglovers #puppies #doggo #puppylove #ilovemydog #puppiesofinstagram #doglife " \
+          "#doggy #dogsofinsta #Husky #Huskies #HuskiesOfInstagram " \
+          "#HuskyPuppy #SiberianHusky #HuskyGram #HuskyLove #HuskyNation #HuskyOfInstagram #HuskyWorld #HuskyDog " \
+          "#InstaHusky #HuskyPuppies "
+
+try:
+    with open('recover.json') as json_file:
+        try:
+            data = json.load(json_file)
+            if 'image_id' in data:
+                photoId = data['image_id']
+        except Exception as ex:
+            print(ex)
+            json_file1 = open('recover.json', 'w+')
+            recovery_object = {'image_id': 1}
+            json_file1.write(json.dumps(recovery_object))
+except Exception as ex:
+    json_file1 = open('recover.json', 'w+')
+    recovery_object = {'image_id': 1}
+    json_file1.write(json.dumps(recovery_object))
 
 
 def rewriteImageName():
@@ -39,7 +54,7 @@ def rewriteImageName():
         i += 1
         # break
 
-@tl.job(interval=timedelta(seconds=600))
+@tl.job(interval=timedelta(seconds=1))
 def uploadPhoto():
     global photoId
     global instagramAPI
@@ -47,12 +62,14 @@ def uploadPhoto():
 
     photo_path = 'photos/{}.JPEG'.format(photoId)
     print("Uploading photo {}".format(photo_path))
-    instagramAPI.uploadPhoto(photo_path, caption=caption)
+    # instagramAPI.uploadPhoto(photo_path, caption=caption)
     photoId += 1
     print("Uploaded photo {}".format(photo_path))
+    recovery_object = {'image_id': photoId}
+    fp = open("recover.json", "w+")
+    fp.write(json.dumps(recovery_object))
+    fp.close()
 
 
 # uploadPhoto()
-# tl.start(block=True)
-
-rewriteImageName()
+tl.start(block=True)
