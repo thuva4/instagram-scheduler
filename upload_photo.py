@@ -60,13 +60,17 @@ def uploadPhoto():
 
     photo_path = 'photos/{}.JPEG'.format(photoId)
     print("Uploading photo {}".format(photo_path))
-    instagramAPI.uploadPhoto(photo_path, caption=caption)
-    photoId += 1
-    print("Uploaded photo {}".format(photo_path))
-    recovery_object = {'image_id': photoId}
-    fp = open("recover.json", "w+")
-    fp.write(json.dumps(recovery_object))
-    fp.close()
+    try:
+        instagramAPI.uploadPhoto(photo_path, caption=caption)
+        photoId += 1
+        print("Uploaded photo {}".format(photo_path))
+        recovery_object = {'image_id': photoId}
+        fp = open("recover.json", "w+")
+        fp.write(json.dumps(recovery_object))
+        fp.close()
+    except Exception as ex:
+        print(ex)
+        tl.stop()
 
 
 uploadPhoto()
