@@ -16,8 +16,8 @@ from InstagramAPI.InstagramAPI import InstagramAPI
 
 tl = Timeloop()
 
-username = os.environ['instagram-username']
-password = os.environ['instagram-password']
+username = os.environ['instagram_username']
+password = os.environ['instagram_password']
 instagramAPI = InstagramAPI(username, password)
 instagramAPI.login()  # login
 photoId = 1
