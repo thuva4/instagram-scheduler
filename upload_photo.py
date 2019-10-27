@@ -3,17 +3,10 @@
 #
 # Use text editor to edit the script and type in valid Instagram username/password
 import json
-import time
-from timeloop import Timeloop
-from datetime import timedelta
-
-# Do the import
-# import InstagramAPI
-
+from threading import Event
 import os
 from InstagramAPI.InstagramAPI import InstagramAPI
 
-tl = Timeloop()
 
 username = os.environ['instagram_username']
 password = os.environ['instagram_password']
@@ -25,6 +18,9 @@ caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #
           "#doggy #dogsofinsta #Husky #Huskies #HuskiesOfInstagram " \
           "#HuskyPuppy #SiberianHusky #HuskyGram #HuskyLove #HuskyNation #HuskyOfInstagram #HuskyWorld #HuskyDog " \
           "#InstaHusky #HuskyPuppies "
+
+stopped = Event()
+
 
 try:
     with open('recover.json') as json_file:
@@ -46,32 +42,34 @@ except Exception as ex:
 def rewriteImageName():
     path_name = './photos/'
     arr = os.listdir('./photos/')
-    i =1
+    i = 1
     for file in arr:
         os.rename("{}/{}".format(path_name, file), "{}/{}".format(path_name, "{}.JPEG".format(i)))
         print(file)
         i += 1
 
-@tl.job(interval=timedelta(seconds=600))
-def uploadPhoto():
-    global photoId
-    global instagramAPI
-    global caption
 
-    photo_path = 'photos/{}.JPEG'.format(photoId)
-    print("Uploading photo {}".format(photo_path))
-    try:
-        instagramAPI.uploadPhoto(photo_path, caption=caption)
-        photoId += 1
-        print("Uploaded photo {}".format(photo_path))
-        recovery_object = {'image_id': photoId}
-        fp = open("recover.json", "w+")
-        fp.write(json.dumps(recovery_object))
-        fp.close()
-    except Exception as ex:
-        print(ex)
-        tl.stop()
+def uploadPhoto():
+    global stopped
+    while not stopped.wait(1):
+        global photoId
+        global instagramAPI
+        global caption
+
+        try:
+            photo_path = 'photos/{}.JPEG'.format(photoId)
+            print("Uploading photo {}".format(photo_path))
+            fpa = open(photo_path)
+            # instagramAPI.uploadPhoto(photo_path, caption=caption)
+            photoId += 1
+            print("Uploaded photo {}".format(photo_path))
+            recovery_object = {'image_id': photoId}
+            fp = open("recover.json", "w+")
+            fp.write(json.dumps(recovery_object))
+            fp.close()
+        except Exception as ex:
+            print(ex)
+            break
 
 
 uploadPhoto()
-tl.start(block=True)
