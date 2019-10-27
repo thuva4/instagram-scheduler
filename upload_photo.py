@@ -16,23 +16,23 @@ from InstagramAPI.InstagramAPI import InstagramAPI
 
 tl = Timeloop()
 
-username = os.environ['instagram_username']
-password = os.environ['instagram_password']
-instagramAPI = InstagramAPI(username, password)
-instagramAPI.login()  # login
-photoId = 1
-caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #dogoftheday " \
-          "#doglovers #puppies #doggo #puppylove #ilovemydog #puppiesofinstagram #doglife " \
-          "#doggy #dogsofinsta #Husky #Huskies #HuskiesOfInstagram " \
-          "#HuskyPuppy #SiberianHusky #HuskyGram #HuskyLove #HuskyNation #HuskyOfInstagram #HuskyWorld #HuskyDog " \
-          "#InstaHusky #HuskyPuppies "
+# username = os.environ['instagram_username']
+# password = os.environ['instagram_password']
+# instagramAPI = InstagramAPI(username, password)
+# instagramAPI.login()  # login
+# photoId = 1
+# caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #dogoftheday " \
+#           "#doglovers #puppies #doggo #puppylove #ilovemydog #puppiesofinstagram #doglife " \
+#           "#doggy #dogsofinsta #Husky #Huskies #HuskiesOfInstagram " \
+#           "#HuskyPuppy #SiberianHusky #HuskyGram #HuskyLove #HuskyNation #HuskyOfInstagram #HuskyWorld #HuskyDog " \
+#           "#InstaHusky #HuskyPuppies "
 
 
 def rewriteImageName():
     path_name = './photos/'
     arr = os.listdir('./photos/')
     index = arr.__len__()
-    i =0;
+    i =1
     for file in arr:
         os.rename("{}/{}".format(path_name, file), "{}/{}".format(path_name, "{}.JPEG".format(i)))
         print(file)
@@ -52,7 +52,7 @@ def uploadPhoto():
     print("Uploaded photo {}".format(photo_path))
 
 
-uploadPhoto()
-tl.start(block=True)
+# uploadPhoto()
+# tl.start(block=True)
 
-# rewriteImageName()
+rewriteImageName()
