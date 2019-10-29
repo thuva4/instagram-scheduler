@@ -3,6 +3,7 @@
 #
 # Use text editor to edit the script and type in valid Instagram username/password
 import json
+import random
 from threading import Event
 import os
 from InstagramAPI.InstagramAPI import InstagramAPI
@@ -13,12 +14,47 @@ password = os.environ['instagram_password']
 instagramAPI = InstagramAPI(username, password)
 instagramAPI.login()  # login
 photoId = 1
-caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #dogoftheday " \
-          "#doglovers #puppies #doggo #puppylove #ilovemydog #puppiesofinstagram #doglife " \
-          "#doggy #dogsofinsta #Husky #Huskies #HuskiesOfInstagram " \
-          "#HuskyPuppy #SiberianHusky #HuskyGram #HuskyLove #HuskyNation #HuskyOfInstagram #HuskyWorld #HuskyDog " \
-          "#InstaHusky #HuskyPuppies "
 
+hashTags = [
+    "#dogsofinstagram",
+    "#puppy",
+    "#instadog",
+    "#dogstagram",
+    "#dogs",
+    "#dogoftheday",
+    "#dogsitting",
+    "#ilovemydog",
+    "#doglover",
+    "#pup",
+    "#instapuppy",
+    "#instagramdogs",
+    "#dogs_of_instagram",
+    "#lovedogs",
+    "#puppylove",
+    "#puppies",
+    "#doggy",
+    "#lovepuppies",
+    "#dogscorner",
+    "#dogdailyfeatures",
+    "#petbox",
+    "#dog",
+    "#dogsandpals",
+    "#sausagedogcentral",
+    "#mydog",
+    "#pooch",
+"   #dog",
+    "#dogsofinstagram",
+    "#dogs",
+    "#puppy",
+    "#instadog",
+    "#dogstagram",
+    "#doglover",
+    "#dogoftheday",
+    "#doglovers", "#puppies", "#doggo", "#puppylove", "#ilovemydog", "#puppiesofinstagram","#doglife",
+    "#doggy", "#dogsofinsta"
+]
+caption = "".join(x + " " for x in random.choices(hashTags, k=30))
+print(caption)
 stopped = Event()
 from PIL import Image
 
