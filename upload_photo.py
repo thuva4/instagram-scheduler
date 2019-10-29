@@ -20,7 +20,7 @@ caption = "#dog #dogsofinstagram #dogs #puppy #instadog #dogstagram  #doglover #
           "#InstaHusky #HuskyPuppies "
 
 stopped = Event()
-
+from PIL import Image
 
 try:
     with open('recover.json') as json_file:
@@ -44,32 +44,39 @@ def rewriteImageName():
     arr = os.listdir('./photos/')
     i = 1
     for file in arr:
-        os.rename("{}/{}".format(path_name, file), "{}/{}".format(path_name, "{}.JPEG".format(i)))
-        print(file)
+        num = file.split(".")[1]
+        if num == "png":
+            im = Image.open("{}/{}".format(path_name, file))
+            im.convert('RGB').save("{}/{}".format(path_name, "{}.JPEG".format(i)), "JPEG")
+        else:
+            os.rename("{}/{}".format(path_name, file), "{}/{}".format(path_name, "{}.JPEG".format(i)))
+        # print(file)
         i += 1
 
 
 def uploadPhoto():
     global stopped
-    while not stopped.wait(1):
+    fileNotFoundError = 0
+    while not stopped.wait(1200):
         global photoId
         global instagramAPI
         global caption
-
+        if fileNotFoundError > 5:
+            break
         try:
             photo_path = 'photos/{}.JPEG'.format(photoId)
             print("Uploading photo {}".format(photo_path))
             fpa = open(photo_path)
-            # instagramAPI.uploadPhoto(photo_path, caption=caption)
+            instagramAPI.uploadPhoto(photo_path, caption=caption)
             photoId += 1
             print("Uploaded photo {}".format(photo_path))
             recovery_object = {'image_id': photoId}
             fp = open("recover.json", "w+")
             fp.write(json.dumps(recovery_object))
             fp.close()
-        except Exception as ex:
-            print(ex)
-            break
+            fileNotFoundError = 0
+        except FileNotFoundError:
+            fileNotFoundError += 1
 
 
 uploadPhoto()
