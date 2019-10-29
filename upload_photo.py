@@ -42,7 +42,7 @@ hashTags = [
     "#sausagedogcentral",
     "#mydog",
     "#pooch",
-"   #dog",
+    "#dog",
     "#dogsofinstagram",
     "#dogs",
     "#puppy",
@@ -53,8 +53,7 @@ hashTags = [
     "#doglovers", "#puppies", "#doggo", "#puppylove", "#ilovemydog", "#puppiesofinstagram","#doglife",
     "#doggy", "#dogsofinsta"
 ]
-caption = "".join(x + " " for x in random.choices(hashTags, k=30))
-print(caption)
+
 stopped = Event()
 from PIL import Image
 
@@ -96,10 +95,10 @@ def uploadPhoto():
     while not stopped.wait(1200):
         global photoId
         global instagramAPI
-        global caption
         if fileNotFoundError > 5:
             break
         try:
+            caption = "".join(x + " " for x in random.choices(hashTags, k=30))
             photo_path = 'photos/{}.JPEG'.format(photoId)
             print("Uploading photo {}".format(photo_path))
             fpa = open(photo_path)
