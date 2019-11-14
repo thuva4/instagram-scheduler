@@ -50,8 +50,15 @@ hashTags = [
     "#dogstagram",
     "#doglover",
     "#dogoftheday",
-    "#doglovers", "#puppies", "#doggo", "#puppylove", "#ilovemydog", "#puppiesofinstagram","#doglife",
-    "#doggy", "#dogsofinsta"
+    "#doglovers",
+    "#puppies",
+    "#doggo",
+    "#puppylove",
+    "#ilovemydog",
+    "#puppiesofinstagram",
+    "#doglife",
+    "#doggy",
+    "#dogsofinsta"
 ]
 
 stopped = Event()
@@ -111,7 +118,25 @@ def uploadPhoto():
             fp.close()
             fileNotFoundError = 0
         except FileNotFoundError:
-            fileNotFoundError += 1
+            try:
+                photo_path = 'photos/{}.jpg'.format(photoId)
+                print("Uploading photo {}".format(photo_path))
+                fpa = open(photo_path)
+                instagramAPI.uploadPhoto(photo_path, caption=caption)
+                photoId += 1
+                print("Uploaded photo {}".format(photo_path))
+                recovery_object = {'image_id': photoId}
+                fp = open("recover.json", "w+")
+                fp.write(json.dumps(recovery_object))
+                fp.close()
+                fileNotFoundError = 0
+            except FileNotFoundError:
+                fileNotFoundError += 1
+                photoId += 1
+                recovery_object = {'image_id': photoId}
+                fp = open("recover.json", "w+")
+                fp.write(json.dumps(recovery_object))
+                fp.close()
 
 
 uploadPhoto()
